@@ -43,7 +43,7 @@ function M.get_player_class(pid)
 	end
 end
 
-function M.is_skill_major_or_minor(pid, skill)
+function M.is_skill_major(pid, skill)
 	local player_class = M.get_player_class(pid)
 
   local found = false
@@ -53,6 +53,14 @@ function M.is_skill_major_or_minor(pid, skill)
     end
 	end
 
+  return found
+end
+
+
+function M.is_skill_minor(pid, skill)
+	local player_class = M.get_player_class(pid)
+
+  local found = false
 	for _, skill_id in ipairs(player_class.minorSkills) do
     if skill_id_skill_name_map[skill_id] == skill then
       found = true
@@ -61,5 +69,6 @@ function M.is_skill_major_or_minor(pid, skill)
 
   return found
 end
+
 
 return M

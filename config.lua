@@ -1,41 +1,17 @@
 M = {}
 
--- Simulate how much attributes bonuses character should get on next level-up.
--- Recommended value is between 2 and 10 in multiplicity of 2:
---
---   0 -> x1, 1 -> x2, 5 -> x3, 8 -> x4, 10 -> x5.
-M.DEFAULT_ATTRIBUTE_SKILL_INC = 5
-
--- Determines minimum attribute value increase on level-up. Set this according to
--- DEFAULT_ATTRIBUTE_SKILL_INC_BONUS: 0 -> 1, 1 -> 2, 5 -> 3, 8 -> 4, 10 -> 5.
-M.DEFAULT_ATTRIBUTE_BASE = 3
-
-M.attribute_default_skill_increases = {
-  Strength     = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Intelligence = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Willpower    = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Agility      = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Speed        = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Endurance    = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Personality  = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Luck = 0
-}
-
--- TODO rename to attribute_min_increase
-M.attribute_base_increase = {
-  Strength     = M.DEFAULT_ATTRIBUTE_BASE,
-  Intelligence = M.DEFAULT_ATTRIBUTE_BASE,
-  Willpower    = M.DEFAULT_ATTRIBUTE_BASE,
-  Agility      = M.DEFAULT_ATTRIBUTE_BASE,
-  Speed        = M.DEFAULT_ATTRIBUTE_BASE,
-  Endurance    = M.DEFAULT_ATTRIBUTE_BASE,
-  Personality  = M.DEFAULT_ATTRIBUTE_BASE,
-  Luck = 1
-}
+M.MAJOR_SKILL_UP_PER_ATTR = 2
+M.MINOR_SKILL_UP_PER_ATTR = 3
+M.MISC_SKILL_UP_PER_ATTR = 7
 
 M.attributes = {
   'Strength', 'Intelligence', 'Willpower', 'Agility',
   'Speed', 'Endurance', 'Personality', 'Luck'
+}
+
+M.attributes_no_luck = {
+  'Strength', 'Intelligence', 'Willpower', 'Agility',
+  'Speed', 'Endurance', 'Personality'
 }
 
 M.skills = {
