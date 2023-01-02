@@ -30,7 +30,7 @@ M.attribute_base_increase = {
   Speed        = M.DEFAULT_ATTRIBUTE_BASE,
   Endurance    = M.DEFAULT_ATTRIBUTE_BASE,
   Personality  = M.DEFAULT_ATTRIBUTE_BASE,
-  Luck = 0
+  Luck = 1
 }
 
 M.attributes = {
