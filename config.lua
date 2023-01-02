@@ -1,24 +1,34 @@
 M = {}
 
-M.attribute_default_bonuses = {
-  Strength = 4,
-  Intelligence = 4,
-  Willpower = 4,
-  Agility = 4,
-  Speed = 4,
-  Endurance = 4,
-  Personality = 4,
+-- Simulate how much attributes bonuses character should get on next level-up.
+-- Recommended value is between 2 and 10 in multiplicity of 2:
+--
+--   0 -> x1, 1 -> x2, 5 -> x3, 8 -> x4, 10 -> x5.
+M.DEFAULT_ATTRIBUTE_SKILL_INC = 5
+
+-- Determines minimum attribute value increase on level-up. Set this according to
+-- DEFAULT_ATTRIBUTE_SKILL_INC_BONUS: 0 -> 1, 1 -> 2, 5 -> 3, 8 -> 4, 10 -> 5.
+M.DEFAULT_ATTRIBUTE_BASE = 3
+
+M.attribute_default_skill_increases = {
+  Strength     = M.DEFAULT_ATTRIBUTE_SKILL_INC,
+  Intelligence = M.DEFAULT_ATTRIBUTE_SKILL_INC,
+  Willpower    = M.DEFAULT_ATTRIBUTE_SKILL_INC,
+  Agility      = M.DEFAULT_ATTRIBUTE_SKILL_INC,
+  Speed        = M.DEFAULT_ATTRIBUTE_SKILL_INC,
+  Endurance    = M.DEFAULT_ATTRIBUTE_SKILL_INC,
+  Personality  = M.DEFAULT_ATTRIBUTE_SKILL_INC,
   Luck = 0
 }
 
 M.attribute_base_increase = {
-  Strength = 2,
-  Intelligence = 2,
-  Willpower = 2,
-  Agility = 2,
-  Speed = 2,
-  Endurance = 2,
-  Personality = 2,
+  Strength     = M.DEFAULT_ATTRIBUTE_BASE,
+  Intelligence = M.DEFAULT_ATTRIBUTE_BASE,
+  Willpower    = M.DEFAULT_ATTRIBUTE_BASE,
+  Agility      = M.DEFAULT_ATTRIBUTE_BASE,
+  Speed        = M.DEFAULT_ATTRIBUTE_BASE,
+  Endurance    = M.DEFAULT_ATTRIBUTE_BASE,
+  Personality  = M.DEFAULT_ATTRIBUTE_BASE,
   Luck = 0
 }
 

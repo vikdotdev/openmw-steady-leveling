@@ -2,8 +2,10 @@ local config = require('custom/reckless/config')
 local attributes = config.attributes
 local skills = config.skills
 local governing_attributes = config.governing_attributes
-local attribute_default_bonuses = config.attribute_default_bonuses
+local attribute_default_skill_increases = config.attribute_default_skill_increases
 local attribute_base_increase = config.attribute_base_increase
+local DEFAULT_ATTRIBUTE_SKILL_INC = config.DEFAULT_ATTRIBUTE_SKILL_INC
+local DEFAULT_ATTRIBUTE_BASE = config.DEFAULT_ATTRIBUTE_BASE
 
 local RELE = {}
 
@@ -79,39 +81,46 @@ local function update_cached_skill(pid, skill)
   end
 end
 
-local function update_attribute_bonuses(pid)
+local function update_attribute_skill_increases(pid)
   for _, attribute in ipairs(attributes) do
-    local skill_ups = get_attribute_skill_ups(pid, attribute)
+    local skill_up = get_attribute_skill_ups(pid, attribute)
 
-    local bonus = attribute_default_bonuses[attribute]
-    if skill_ups >= 10 then
-      bonus = 10
-    elseif skill_ups >= 8 then
-      bonus = 8
-    elseif skill_ups >= 6 then
-      bonus = 5
+    local increase = attribute_default_skill_increases[attribute]
+    if skill_up >= DEFAULT_ATTRIBUTE_SKILL_INC then
+      if skill_up >= 10 then
+        increase = 10
+      elseif skill_up >= 8 then
+        increase = 8
+      elseif skill_up >= 6 then
+        increase = 5
+      elseif skill_up >= 4 then
+        increase = 1
+      elseif skill_up >= 2 then
+        increase = 0
+      end
     end
 
     -- TODO check if minor or major and add on top of default x2
 
-    Players[pid].data.attributes[attribute].skillIncrease = bonus
+    Players[pid].data.attributes[attribute].skillIncrease = increase
   end
 
   Players[pid]:LoadAttributes()
 end
 
 local function increase_attributes(pid)
+  local skills_needed_to_increase_attribute = 2
   for _, attribute in ipairs(attributes) do
     local val = attribute_base_increase[attribute]
 
-    -- Start at 0 for attributes which have at least 4 skill-ups
-    -- This prevents from getting unexpected +2 points when attributes did not
-    -- receive any bonuses from skills
-    if get_attribute_skill_ups(pid, attribute) >= 4 then
+    -- Start at 0 for attributes which exceed the default attribute base.
+    -- This prevents from getting +DEFAULT_ATTRIBUTE_BASE points
+    -- when given attribute did not receive any bonuses from skills.
+    if get_attribute_skill_ups(pid, attribute) >= DEFAULT_ATTRIBUTE_BASE * skills_needed_to_increase_attribute then
       val = 0
     end
 
-    while get_attribute_skill_ups(pid, attribute) >= 2 do
+    while get_attribute_skill_ups(pid, attribute) >= skills_needed_to_increase_attribute do
       local new_skill_up_val = get_attribute_skill_ups(pid, attribute) - 2
       set_attribute_skill_ups(pid, attribute, new_skill_up_val)
       val = val + 1
@@ -126,6 +135,9 @@ end
 
 function RELE.init_player(_, pid)
   local data = {
+    -- For potential future retroactive health calculations
+    starting_endurance = get_attribute(pid, 'Endurance'),
+    starting_strength = get_attribute(pid, 'Strength'),
     attribute_skill_ups = {},
     cached_level = get_current_level(pid),
     cached_attributes = {},
@@ -151,7 +163,7 @@ function RELE.on_skill(_, pid)
       update_cached_skill(pid, skill)
     end
 
-    update_attribute_bonuses(pid)
+    update_attribute_skill_increases(pid)
   end
 end
 
@@ -166,7 +178,7 @@ function RELE.on_level(_, pid)
       end
 
       increase_attributes(pid)
-      update_attribute_bonuses(pid)
+      update_attribute_skill_increases(pid)
     else
       cache_attributes(pid)
     end
