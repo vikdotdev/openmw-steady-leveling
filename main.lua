@@ -1,11 +1,12 @@
 local config = require('custom/reckless/config')
 local attributes = config.attributes
 local skills = config.skills
-local governing_attributes = config.governing_attributes
+local governing_attributes = config.governing_attributes_by_string
 local attribute_default_skill_increases = config.attribute_default_skill_increases
 local attribute_base_increase = config.attribute_base_increase
 local DEFAULT_ATTRIBUTE_SKILL_INC = config.DEFAULT_ATTRIBUTE_SKILL_INC
 local DEFAULT_ATTRIBUTE_BASE = config.DEFAULT_ATTRIBUTE_BASE
+local is_skill_major_or_minor = require('custom/reckless/class_info').is_skill_major_or_minor
 
 local RELE = {}
 
@@ -74,7 +75,8 @@ local function update_cached_skill(pid, skill)
   local old = get_cached_skill(pid, skill)
   local diff = new - old
   set_cached_skill(pid, skill, new)
-  if diff > 0 then
+
+  if diff > 0 and is_skill_major_or_minor(pid, skill) then
     local attribute = governing_attributes[skill]
     local new_skill_up = get_attribute_skill_ups(pid, attribute) + diff
     set_attribute_skill_ups(pid, attribute, new_skill_up)
@@ -99,8 +101,6 @@ local function update_attribute_skill_increases(pid)
         increase = 0
       end
     end
-
-    -- TODO check if minor or major and add on top of default x2
 
     Players[pid].data.attributes[attribute].skillIncrease = increase
   end
