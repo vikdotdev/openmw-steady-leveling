@@ -38,6 +38,10 @@ local function get_cached_attribute(pid, attribute)
   return Players[pid].data.customVariables.RELE.cached_attributes[attribute]
 end
 
+local function set_cached_attribute(pid, attribute, val)
+  Players[pid].data.customVariables.RELE.cached_attributes[attribute] = val
+end
+
 local function get_skill(pid, skill)
   return Players[pid].data.skills[skill].base
 end
@@ -129,6 +133,8 @@ local function increase_attributes(pid)
     if val > 0 then
       local new_val = get_attribute(pid, attribute) + val
       set_attribute(pid, attribute, new_val)
+      set_cached_attribute(pid, attribute, new_val)
+      Players[pid]:LoadAttributes()
     end
   end
 end
@@ -156,7 +162,6 @@ function RELE.init_player(_, pid)
   tes3mp.SendMessage(pid, "Reckless Leveling: INITIALIZED" .. '\n')
 end
 
--- On skill tick
 function RELE.on_skill(_, pid)
   if has_rele(pid) then
     for _, skill in ipairs(skills) do
@@ -167,11 +172,10 @@ function RELE.on_skill(_, pid)
   end
 end
 
--- On skill level-up
 function RELE.on_level(_, pid)
   if has_rele(pid) then
     if get_current_level(pid) > get_cached_level(pid) then
-      set_cached_level(pid, get_cached_level(pid) + 1)
+      set_cached_level(pid, get_current_level(pid))
 
       for _, attribute in ipairs(attributes) do
         set_attribute(pid, attribute, get_cached_attribute(pid, attribute))
