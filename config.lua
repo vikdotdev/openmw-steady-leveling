@@ -11,6 +11,17 @@ M.attribute_default_bonuses = {
   Luck = 0
 }
 
+M.attribute_base_increase = {
+  Strength = 2,
+  Intelligence = 2,
+  Willpower = 2,
+  Agility = 2,
+  Speed = 2,
+  Endurance = 2,
+  Personality = 2,
+  Luck = 0
+}
+
 M.attributes = {
   'Strength', 'Intelligence', 'Willpower', 'Agility',
   'Speed', 'Endurance', 'Personality', 'Luck'

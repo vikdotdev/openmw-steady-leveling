@@ -3,6 +3,7 @@ local attributes = config.attributes
 local skills = config.skills
 local governing_attributes = config.governing_attributes
 local attribute_default_bonuses = config.attribute_default_bonuses
+local attribute_base_increase = config.attribute_base_increase
 
 local RELE = {}
 
@@ -46,6 +47,14 @@ local function set_cached_skill(pid, skill, val)
   Players[pid].data.customVariables.RELE.cached_skills[skill] = val
 end
 
+local function get_attribute_skill_ups(pid, attribute)
+  return Players[pid].data.customVariables.RELE.attribute_skill_ups[attribute]
+end
+
+local function set_attribute_skill_ups(pid, attribute, val)
+  Players[pid].data.customVariables.RELE.attribute_skill_ups[attribute] = val
+end
+
 local function cache_attributes(pid)
   for _, attribute in ipairs(attributes) do
     Players[pid].data.customVariables.RELE.cached_attributes[attribute] = get_attribute(pid, attribute)
@@ -58,15 +67,6 @@ local function cache_skills(pid)
   end
 end
 
-local function get_attribute_skill_ups(pid, attribute)
-  return Players[pid].data.customVariables.RELE.attribute_skill_ups[attribute]
-end
-
-local function add_attribute_skill_ups(pid, attribute, val)
-  local new_value = Players[pid].data.customVariables.RELE.attribute_skill_ups[attribute] + val
-  Players[pid].data.customVariables.RELE.attribute_skill_ups[attribute] = new_value
-end
-
 local function update_cached_skill(pid, skill)
   local new = get_skill(pid, skill)
   local old = get_cached_skill(pid, skill)
@@ -74,7 +74,8 @@ local function update_cached_skill(pid, skill)
   set_cached_skill(pid, skill, new)
   if diff > 0 then
     local attribute = governing_attributes[skill]
-    add_attribute_skill_ups(pid, attribute, diff)
+    local new_skill_up = get_attribute_skill_ups(pid, attribute) + diff
+    set_attribute_skill_ups(pid, attribute, new_skill_up)
   end
 end
 
@@ -94,10 +95,34 @@ local function update_attribute_bonuses(pid)
     -- TODO check if minor or major and add on top of default x2
 
     Players[pid].data.attributes[attribute].skillIncrease = bonus
-    Players[pid]:LoadAttributes()
   end
+
+  Players[pid]:LoadAttributes()
 end
 
+local function increase_attributes(pid)
+  for _, attribute in ipairs(attributes) do
+    local val = attribute_base_increase[attribute]
+
+    -- Start at 0 for attributes which have at least 4 skill-ups
+    -- This prevents from getting unexpected +2 points when attributes did not
+    -- receive any bonuses from skills
+    if get_attribute_skill_ups(pid, attribute) >= 4 then
+      val = 0
+    end
+
+    while get_attribute_skill_ups(pid, attribute) >= 2 do
+      local new_skill_up_val = get_attribute_skill_ups(pid, attribute) - 2
+      set_attribute_skill_ups(pid, attribute, new_skill_up_val)
+      val = val + 1
+    end
+
+    if val > 0 then
+      local new_val = get_attribute(pid, attribute) + val
+      set_attribute(pid, attribute, new_val)
+    end
+  end
+end
 
 function RELE.init_player(_, pid)
   local data = {
@@ -119,6 +144,7 @@ function RELE.init_player(_, pid)
   tes3mp.SendMessage(pid, "Reckless Leveling: INITIALIZED" .. '\n')
 end
 
+-- On skill tick
 function RELE.on_skill(_, pid)
   if has_rele(pid) then
     for _, skill in ipairs(skills) do
@@ -129,15 +155,17 @@ function RELE.on_skill(_, pid)
   end
 end
 
+-- On skill level-up
 function RELE.on_level(_, pid)
   if has_rele(pid) then
     if get_current_level(pid) > get_cached_level(pid) then
-      set_cached_level(pid, get_cached_level(pid))
+      set_cached_level(pid, get_cached_level(pid) + 1)
 
       for _, attribute in ipairs(attributes) do
         set_attribute(pid, attribute, get_cached_attribute(pid, attribute))
       end
 
+      increase_attributes(pid)
       update_attribute_bonuses(pid)
     else
       cache_attributes(pid)
