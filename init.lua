@@ -1,11 +1,11 @@
-local on_level = require('custom/reckless/level_up').on_level
-local on_skill = require('custom/reckless/skill_up').on_skill
+local base_path = 'custom/steady_leveling/'
+local on_level = require(base_path .. 'level_up').on_level
+local on_skill = require(base_path .. 'skill_up').on_skill
 
-local config = require('custom/reckless/config')
-local ATTRIBUTES = config.attributes
-local SKILLS = config.skills
+local config = require(base_path .. 'config')
+local ATTRIBUTES = config.ATTRIBUTES
 
-local accessors = require('custom/reckless/accessors')
+local accessors = require(base_path .. 'accessors')
 local get_attribute = accessors.get_attribute
 local get_current_level = accessors.get_current_level
 local cache_attributes = accessors.cache_attributes
@@ -20,21 +20,18 @@ local function init_player(_, pid)
     cached_attributes = {},
     cached_skills = {},
     attribute_points_on_level = {},
-    -- TODO level_attribute_skills_ups
-    attribute_skill_ups = {},
-    -- TODO attribute_skills_ups
-    -- remove cached_ prefix
-    cached_major_skill_ups = {},
-    cached_minor_skill_ups = {},
-    cached_misc_skill_ups = {},
+    level_attribute_skill_increases = {},
+    gradual_major_attribute_increases = {},
+    gradual_minor_attribute_increases = {},
+    gradual_misc_attribute_increases = {},
   }
 
   for _, attribute in ipairs(ATTRIBUTES) do
-    data.attribute_skill_ups[attribute] = 0
+    data.level_attribute_skill_increases[attribute] = 0
     data.attribute_points_on_level[attribute] = 0
-    data.cached_major_skill_ups[attribute] = 0
-    data.cached_minor_skill_ups[attribute] = 0
-    data.cached_misc_skill_ups[attribute] = 0
+    data.gradual_major_attribute_increases[attribute] = 0
+    data.gradual_minor_attribute_increases[attribute] = 0
+    data.gradual_misc_attribute_increases[attribute] = 0
   end
 
   Players[pid].data.customVariables.RELE = data
@@ -45,7 +42,7 @@ local function init_player(_, pid)
   tes3mp.SendMessage(pid, "Reckless Leveling: INITIALIZED" .. '\n')
 end
 
--- TODO add console ui and more messages and popup
+-- LATER: add console ui and more messages and popup
 
 customEventHooks.registerHandler('OnPlayerEndCharGen', init_player)
 customEventHooks.registerHandler('OnPlayerLevel', on_level)

@@ -1,8 +1,9 @@
-local config = require('custom/reckless/config')
-local ATTRIBUTES = config.attributes
-local ATTRIBUTES_NO_LUCK = config.attributes_no_luck
+local base_path = 'custom/steady_leveling/'
+local config = require(base_path .. 'config')
+local ATTRIBUTES = config.ATTRIBUTES
+local ATTRIBUTE_CAP = config.ATTRIBUTE_CAP
 
-local accessors = require('custom/reckless/accessors')
+local accessors = require(base_path .. 'accessors')
 local has_plugin = accessors.has_plugin
 local get_current_level = accessors.get_current_level
 local get_cached_level = accessors.get_cached_level
@@ -14,14 +15,13 @@ local get_cached_attribute = accessors.get_cached_attribute
 local get_attribute_points_on_level = accessors.get_attribute_points_on_level
 local set_attribute_points_on_level = accessors.set_attribute_points_on_level
 
-local functions = require('custom/reckless/functions')
+local functions = require(base_path .. 'functions')
 local increase_attributes = functions.increase_attributes
-local update_attribute_skill_ups = functions.update_attribute_skill_ups
+local update_level_attribute_skill_increases = functions.update_level_attribute_skill_increases
 
 local function is_level_increased(pid)
   return get_current_level(pid) > get_cached_level(pid)
 end
-
 
 local function increment_cached_level(pid)
   set_cached_level(pid, get_cached_level(pid) + 1)
@@ -35,29 +35,22 @@ local function attribute_selected_on_level_up_points(pid, attribute)
   return get_attribute(pid, attribute) - get_cached_attribute(pid, attribute)
 end
 
-local function is_attribute_selected_on_level_up_below_ceiling(pid, attribute, points)
-  -- TODO constantize?
-  local attribute_ceiling = 100
-  return get_attribute(pid, attribute) + get_attribute_points_on_level(pid, attribute) + points <= attribute_ceiling
+local function is_attribute_selected_on_level_up_below_cap(pid, attribute, points)
+  return get_attribute(pid, attribute) + get_attribute_points_on_level(pid, attribute) + points <= ATTRIBUTE_CAP
 end
 
 local M = {}
 
--- TODO test if I'll be able to get up to 100 attribute safely
 function M.on_level(_, pid)
   if has_plugin(pid) then
     if is_level_increased(pid) then
       increment_cached_level(pid)
 
-      -- no luck breaks luck? yes
-      for _, attribute in ipairs(ATTRIBUTES_NO_LUCK) do
+      for _, attribute in ipairs(ATTRIBUTES) do
         if is_attribute_selected_on_level_up(pid, attribute) then
-          -- at always adds 1 point
           local points = attribute_selected_on_level_up_points(pid, attribute)
-          functions.chat_message(pid, "POINTS for " .. attribute .. ' - ' .. points)
-          if is_attribute_selected_on_level_up_below_ceiling(pid, attribute, points) then
+          if is_attribute_selected_on_level_up_below_cap(pid, attribute, points) then
             set_attribute_points_on_level(pid, attribute, get_attribute_points_on_level(pid, attribute) + points)
-            -- TODO else set to ceiling ???
           end
         end
       end
@@ -72,9 +65,9 @@ function M.on_level(_, pid)
       increase_attributes(pid)
 
       -- resets leveling skill increases
-      update_attribute_skill_ups(pid)
+      update_level_attribute_skill_increases(pid)
 
-      -- TODO recalculate health
+      -- LATER: recalculate health
     else
       cache_attributes(pid)
     end

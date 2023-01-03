@@ -1,6 +1,7 @@
-local config = require('custom/reckless/config')
-local ATTRIBUTES = config.attributes
-local SKILLS = config.skills
+local base_path = 'custom/steady_leveling/'
+local config = require(base_path .. 'config')
+local ATTRIBUTES = config.ATTRIBUTES
+local SKILLS = config.SKILLS
 
 local M = {}
 
@@ -56,49 +57,48 @@ function M.set_cached_skill(pid, skill, val)
   Players[pid].data.customVariables.RELE.cached_skills[skill] = val
 end
 
-function M.cached_major_skill_ups(pid)
-  return Players[pid].data.customVariables.RELE.cached_major_skill_ups
+function M.gradual_major_attribute_increases(pid)
+  return Players[pid].data.customVariables.RELE.gradual_major_attribute_increases
 end
 
-function M.get_cached_major_skill_up(pid, attribute)
-  return Players[pid].data.customVariables.RELE.cached_major_skill_ups[attribute]
+function M.get_gradual_major_attribute_increase(pid, attribute)
+  return Players[pid].data.customVariables.RELE.gradual_major_attribute_increases[attribute]
 end
 
-function M.set_cached_major_skill_up(pid, attribute, val)
-  Players[pid].data.customVariables.RELE.cached_major_skill_ups[attribute] = val
+function M.set_gradual_major_attribute_increase(pid, attribute, val)
+  Players[pid].data.customVariables.RELE.gradual_major_attribute_increases[attribute] = val
 end
 
-function M.cached_minor_skill_ups(pid)
-  return Players[pid].data.customVariables.RELE.cached_minor_skill_ups
+function M.gradual_minor_attribute_increases(pid)
+  return Players[pid].data.customVariables.RELE.gradual_minor_attribute_increases
 end
 
-function M.get_cached_minor_skill_up(pid, attribute)
-  return Players[pid].data.customVariables.RELE.cached_minor_skill_ups[attribute]
+function M.get_gradual_minor_attribute_increase(pid, attribute)
+  return Players[pid].data.customVariables.RELE.gradual_minor_attribute_increases[attribute]
 end
 
-function M.set_cached_minor_skill_up(pid, attribute, val)
-  Players[pid].data.customVariables.RELE.cached_minor_skill_ups[attribute] = val
+function M.set_gradual_minor_attribute_increase(pid, attribute, val)
+  Players[pid].data.customVariables.RELE.gradual_minor_attribute_increases[attribute] = val
 end
 
-function M.cached_misc_skill_ups(pid)
-  return Players[pid].data.customVariables.RELE.cached_misc_skill_ups
+function M.gradual_misc_attribute_increases(pid)
+  return Players[pid].data.customVariables.RELE.gradual_misc_attribute_increases
 end
 
-function M.get_cached_misc_skill_up(pid, attribute)
-  return Players[pid].data.customVariables.RELE.cached_misc_skill_ups[attribute]
+function M.get_gradual_misc_attribute_increase(pid, attribute)
+  return Players[pid].data.customVariables.RELE.gradual_misc_attribute_increases[attribute]
 end
 
-function M.set_cached_misc_skill_up(pid, attribute, val)
-  Players[pid].data.customVariables.RELE.cached_misc_skill_ups[attribute] = val
+function M.set_gradual_misc_attribute_increase(pid, attribute, val)
+  Players[pid].data.customVariables.RELE.gradual_misc_attribute_increases[attribute] = val
 end
 
-function M.get_attribute_skill_ups(pid, attribute)
-  return Players[pid].data.customVariables.RELE.attribute_skill_ups[attribute]
+function M.get_level_attribute_skill_increases(pid, attribute)
+  return Players[pid].data.customVariables.RELE.level_attribute_skill_increases[attribute]
 end
 
--- TODO singularize
-function M.set_attribute_skill_ups(pid, attribute, val)
-  Players[pid].data.customVariables.RELE.attribute_skill_ups[attribute] = val
+function M.set_level_attribute_skill_increases(pid, attribute, val)
+  Players[pid].data.customVariables.RELE.level_attribute_skill_increases[attribute] = val
 end
 
 function M.cache_attributes(pid)
