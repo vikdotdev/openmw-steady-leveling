@@ -5,9 +5,10 @@ system on top.
 
 ## Not actually OpenMW, yet
 The only implementation available now is for TES3MP multiplayer fork. I'm open
-to implementing _(or getting help with it)_ the same for single-player OpenMW at
-some point if anyone is interested.
+to implementing _(or getting help with implementing)_ the same mod for
+single-player OpenMW at some point if anyone is interested.
 
+## Compatibility
 This was tested on TES3MP v0.8.1
 
 # How it works
@@ -27,7 +28,6 @@ This can be configured in `config.lua`.
 Synopsis:
 ```
 cd <your tes3mp folder>
-mkdir -p server/scripts/custom/steady_leveling
 cd server/scripts/custom
 git clone https://github.com/vikdotdev/openmw-steady-leveling
 mv openmw-steady-leveling steady_leveling
@@ -35,11 +35,8 @@ mv openmw-steady-leveling steady_leveling
 cd <your tes3mp folder>
 
 # appends the line to a file
-echo 'require("scripts/custom/steady_leveling/init")' >> scripts/customScripts/init
+echo 'require("custom/steady_leveling/init")' >> scripts/customScripts.lua
 ```
-
-# Tweaking
-There's only a couple
 
 # Credit
 This mod is based on [this mod](https://github.com/phi-fell/carefree_leveling#phis-carefree-leveling)
