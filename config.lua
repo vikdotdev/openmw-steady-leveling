@@ -1,11 +1,12 @@
 M = {}
 
--- For incremental attribute increases.
-M.ATTRIBUTE_CAP = 100
-
+-- Change these to change leveling pace and/or increase class focused gameplay.
 M.MAJOR_SKILL_UP_PER_ATTR = 3
 M.MINOR_SKILL_UP_PER_ATTR = 4
-M.MISC_SKILL_UP_PER_ATTR = 8
+M.MISC_SKILL_UP_PER_ATTR = 10
+
+-- For incremental attribute increases.
+M.ATTRIBUTE_CAP = 100
 
 M.ATTRIBUTES = {
   'Strength', 'Intelligence', 'Willpower', 'Agility',
