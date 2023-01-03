@@ -1,44 +1,18 @@
 M = {}
 
--- Simulate how much attributes bonuses character should get on next level-up.
--- Recommended value is between 2 and 10 in multiplicity of 2:
---
---   0 -> x1, 1 -> x2, 5 -> x3, 8 -> x4, 10 -> x5.
-M.DEFAULT_ATTRIBUTE_SKILL_INC = 5
+-- For incremental attribute increases.
+M.ATTRIBUTE_CAP = 100
 
--- Determines minimum attribute value increase on level-up. Set this according to
--- DEFAULT_ATTRIBUTE_SKILL_INC_BONUS: 0 -> 1, 1 -> 2, 5 -> 3, 8 -> 4, 10 -> 5.
-M.DEFAULT_ATTRIBUTE_BASE = 3
+M.MAJOR_SKILL_UP_PER_ATTR = 3
+M.MINOR_SKILL_UP_PER_ATTR = 4
+M.MISC_SKILL_UP_PER_ATTR = 8
 
-M.attribute_default_skill_increases = {
-  Strength     = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Intelligence = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Willpower    = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Agility      = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Speed        = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Endurance    = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Personality  = M.DEFAULT_ATTRIBUTE_SKILL_INC,
-  Luck = 0
-}
-
--- TODO rename to attribute_min_increase
-M.attribute_base_increase = {
-  Strength     = M.DEFAULT_ATTRIBUTE_BASE,
-  Intelligence = M.DEFAULT_ATTRIBUTE_BASE,
-  Willpower    = M.DEFAULT_ATTRIBUTE_BASE,
-  Agility      = M.DEFAULT_ATTRIBUTE_BASE,
-  Speed        = M.DEFAULT_ATTRIBUTE_BASE,
-  Endurance    = M.DEFAULT_ATTRIBUTE_BASE,
-  Personality  = M.DEFAULT_ATTRIBUTE_BASE,
-  Luck = 1
-}
-
-M.attributes = {
+M.ATTRIBUTES = {
   'Strength', 'Intelligence', 'Willpower', 'Agility',
   'Speed', 'Endurance', 'Personality', 'Luck'
 }
 
-M.skills = {
+M.SKILLS = {
   'Block', 'Armorer', 'Mediumarmor', 'Heavyarmor', 'Bluntweapon', 'Longblade',
   'Axe', 'Spear', 'Athletics', 'Enchant', 'Destruction', 'Alteration',
   'Illusion', 'Conjuration', 'Mysticism', 'Restoration', 'Alchemy',
@@ -46,7 +20,7 @@ M.skills = {
   'Marksman', 'Mercantile', 'Speechcraft', 'Handtohand',
 }
 
-M.skill_id_skill_name_map = {
+M.SKILL_ID_SKILL_NAME_MAP = {
   [0] = 'Block',
   [1] = 'Armorer',
   [2] = 'Medium Armor',
@@ -76,7 +50,7 @@ M.skill_id_skill_name_map = {
   [26] = 'Hand-to-hand'
 }
 
-M.governing_attributes_by_string = {
+M.GOVERNING_ATTRIBUTES_BY_STRING = {
   Block = 'Agility',
   Armorer = 'Strength',
   Mediumarmor = 'Endurance',
@@ -106,9 +80,9 @@ M.governing_attributes_by_string = {
   Handtohand = 'Speed',
 }
 
-M.default_classes = {}
+M.DEFAULT_CLASSES = {}
 
-M.default_classes["acrobat"] = {
+M.DEFAULT_CLASSES["acrobat"] = {
 	name = "Acrobat",
 	specialization = 2,
 	majorAttributes = {3, 5},
@@ -117,7 +91,7 @@ M.default_classes["acrobat"] = {
 	description = "Acrobat is a polite euphemism for agile burglars and second-story men. These thieves avoid detection by stealth, and rely on mobility and cunning to avoid capture.",
 }
 
-M.default_classes["agent"] = {
+M.DEFAULT_CLASSES["agent"] = {
 	name = "Agent",
 	specialization = 2,
 	majorAttributes = {6, 3},
@@ -126,7 +100,7 @@ M.default_classes["agent"] = {
 	description = "Agents are operatives skilled in deception and avoidance, but trained in self-defense and the use of deadly force. Self-reliant and independent, agents devote themselves to personal goals, or to various patrons or causes.",
 }
 
-M.default_classes["archer"] = {
+M.DEFAULT_CLASSES["archer"] = {
 	name = "Archer",
 	specialization = 0,
 	majorAttributes = {3, 0},
@@ -134,7 +108,7 @@ M.default_classes["archer"] = {
 	minorSkills = {17, 7, 15, 19, 2},
 	description = "Archers are fighters specializing in long-range combat and rapid movement. Opponents are kept at distance by ranged weapons and swift maneuver, and engaged in melee with sword and shield after the enemy is wounded and weary.",
 }
-M.default_classes["assassin"] = {
+M.DEFAULT_CLASSES["assassin"] = {
 	name = "Assassin",
 	specialization = 2,
 	majorAttributes = {4, 1},
@@ -142,7 +116,7 @@ M.default_classes["assassin"] = {
 	minorSkills = {18, 5, 16, 0, 8},
 	description = "Assassins are killers who rely on stealth and mobility to approach victims undetected. Execution is with ranged weapons or with short blades for close work. Assassins include ruthless murderers and principled agents of noble causes.",
 }
-M.default_classes["barbarian"] = {
+M.DEFAULT_CLASSES["barbarian"] = {
 	name = "Barbarian",
 	specialization = 0,
 	majorAttributes = {0, 4},
@@ -150,7 +124,7 @@ M.default_classes["barbarian"] = {
 	minorSkills = {20, 21, 1, 23, 17},
 	description = "Barbarians are the proud, savage warrior elite of the plains nomads, mountain tribes, and sea reavers. They tend to be brutal and direct, lacking civilized graces, but they glory in heroic feats, and excel in fierce, frenzied single combat.",
 }
-M.default_classes["bard"] = {
+M.DEFAULT_CLASSES["bard"] = {
 	name = "Bard",
 	specialization = 2,
 	majorAttributes = {6, 1},
@@ -158,7 +132,7 @@ M.default_classes["bard"] = {
 	minorSkills = {24, 12, 2, 9, 18},
 	description = "Bards are loremasters and storytellers. They crave adventure for the wisdom and insight to be gained, and must depend on sword, shield, spell and enchantment to preserve them from the perils of their educational experiences.",
 }
-M.default_classes["battlemage"] = {
+M.DEFAULT_CLASSES["battlemage"] = {
 	name = "Battlemage",
 	specialization = 1,
 	majorAttributes = {1, 0},
@@ -166,7 +140,7 @@ M.default_classes["battlemage"] = {
 	minorSkills = {14, 5, 23, 9, 16},
 	description = "Battlemages are wizard-warriors, trained in both lethal spellcasting and heavily armored combat. They sacrifice mobility and versatility for the ability to supplement melee and ranged attacks with elemental damage and summoned creatures.",
 }
-M.default_classes["crusader"] = {
+M.DEFAULT_CLASSES["crusader"] = {
 	name = "Crusader",
 	specialization = 0,
 	majorAttributes = {3, 0},
@@ -174,7 +148,7 @@ M.default_classes["crusader"] = {
 	minorSkills = {15, 1, 26, 2, 16},
 	description = "Any heavily armored warrior with spellcasting powers and a good cause may call himself a Crusader. Crusaders do well by doing good. They hunt monsters and villains, making themselves rich by plunder as they rid the world of evil.",
 }
-M.default_classes["healer"] = {
+M.DEFAULT_CLASSES["healer"] = {
 	name = "Healer",
 	specialization = 1,
 	majorAttributes = {2, 6},
@@ -182,7 +156,7 @@ M.default_classes["healer"] = {
 	minorSkills = {12, 16, 17, 21, 4},
 	description = "Healers are spellcasters who swear solemn oaths to heal the afflicted and cure the diseased. When threatened, they defend themselves with reason and disabling attacks and magic, relying on deadly force only in extremity.",
 }
-M.default_classes["knight"] = {
+M.DEFAULT_CLASSES["knight"] = {
 	name = "Knight",
 	specialization = 0,
 	majorAttributes = {0, 6},
@@ -190,7 +164,7 @@ M.default_classes["knight"] = {
 	minorSkills = {15, 24, 2, 9, 1},
 	description = "Of noble birth, or distinguished in battle or tourney, knights are civilized warriors, schooled in letters and courtesy, governed by the codes of chivalry. In addition to the arts of war, knights study the lore of healing and enchantment.",
 }
-M.default_classes["mage"] = {
+M.DEFAULT_CLASSES["mage"] = {
 	name = "Mage",
 	specialization = 1,
 	majorAttributes = {1, 2},
@@ -198,7 +172,7 @@ M.default_classes["mage"] = {
 	minorSkills = {9, 16, 17, 22, 13},
 	description = "Most mages claim to study magic for its intellectual rewards, but they also often profit from its practical applications. Varying widely in temperament and motivation, mages share but one thing in common - an avid love of spellcasting.",
 }
-M.default_classes["monk"] = {
+M.DEFAULT_CLASSES["monk"] = {
 	name = "Monk",
 	specialization = 2,
 	majorAttributes = {3, 2},
@@ -206,7 +180,7 @@ M.default_classes["monk"] = {
 	minorSkills = {0, 23, 21, 15, 4},
 	description = "Monks are students of the ancient martial arts of hand-to-hand combat and unarmored self defense. Monks avoid detection by stealth, mobility, and Agility, and are skilled with a variety of ranged and close-combat weapons.",
 }
-M.default_classes["nightblade"] = {
+M.DEFAULT_CLASSES["nightblade"] = {
 	name = "Nightblade",
 	specialization = 1,
 	majorAttributes = {2, 4},
@@ -214,7 +188,7 @@ M.default_classes["nightblade"] = {
 	minorSkills = {21, 17, 10, 23, 18},
 	description = "Nightblades are spellcasters who use their magics to enhance mobility, concealment, and stealthy close combat. They have a sinister reputation, since many nightblades are thieves, enforcers, assassins, or covert agents.",
 }
-M.default_classes["pilgrim"] = {
+M.DEFAULT_CLASSES["pilgrim"] = {
 	name = "Pilgrim",
 	specialization = 2,
 	majorAttributes = {6, 5},
@@ -222,7 +196,7 @@ M.default_classes["pilgrim"] = {
 	minorSkills = {12, 26, 22, 0, 16},
 	description = "Pilgrims are travellers, seekers of truth and enlightenment. They fortify themselves for road and wilderness with arms, armor, and magic, and through wide experience of the world, they become shrewd in commerce and persuasion.",
 }
-M.default_classes["rogue"] = {
+M.DEFAULT_CLASSES["rogue"] = {
 	name = "Rogue",
 	specialization = 0,
 	majorAttributes = {4, 6},
@@ -231,7 +205,7 @@ M.default_classes["rogue"] = {
 	description = "Rogues are adventurers and opportunists with a gift for getting in and out of trouble. Relying variously on charm and dash, blades and business sense, they thrive on conflict and misfortune, trusting to their luck and cunning to survive.",
 }
 
-M.default_classes["scout"] = {
+M.DEFAULT_CLASSES["scout"] = {
 	name = "Scout",
 	specialization = 0,
 	majorAttributes = {4, 5},
@@ -240,7 +214,7 @@ M.default_classes["scout"] = {
 	description = "Scouts rely on stealth to survey routes and opponents, using ranged weapons and skirmish tactics when forced to fight. By contrast with barbarians, in combat scouts tend to be cautious and methodical, rather than impulsive.",
 }
 
-M.default_classes["sorcerer"] = {
+M.DEFAULT_CLASSES["sorcerer"] = {
 	name = "Sorcerer",
 	specialization = 1,
 	majorAttributes = {1, 5},
@@ -249,7 +223,7 @@ M.default_classes["sorcerer"] = {
 	description = "Though spellcasters by vocation, sorcerers rely most on summonings and enchantments. They are greedy for magic scrolls, rings, armor and weapons, and commanding undead and Daedric servants gratifies their egos.",
 }
 
-M.default_classes["spellsword"] = {
+M.DEFAULT_CLASSES["spellsword"] = {
 	name = "Spellsword",
 	specialization = 1,
 	majorAttributes = {2, 5},
@@ -258,7 +232,7 @@ M.default_classes["spellsword"] = {
 	description = "Spellswords are spellcasting specialists trained to support Imperial troops in skirmish and in battle. Veteran spellswords are prized as mercenaries, and well-suited for careers as adventurers and soldiers-of-fortune.",
 }
 
-M.default_classes["thief"] = {
+M.DEFAULT_CLASSES["thief"] = {
 	name = "Thief",
 	specialization = 2,
 	majorAttributes = {4, 3},
@@ -267,7 +241,7 @@ M.default_classes["thief"] = {
 	description = "Thieves are pickpockets and pilferers. Unlike robbers, who kill and loot, thieves typically choose stealth and subterfuge over violence, and often entertain romantic notions of their charm and cleverness in their acquisitive activities.",
 }
 
-M.default_classes["warrior"] = {
+M.DEFAULT_CLASSES["warrior"] = {
 	name = "Warrior",
 	specialization = 0,
 	majorAttributes = {0, 5},
@@ -276,7 +250,7 @@ M.default_classes["warrior"] = {
 	description = "Warriors are the professional men-at-arms, soldiers, mercenaries, and adventurers of the Empire, trained with various weapons and armor styles, conditioned by long marches, and hardened by ambush, skirmish, and battle.",
 }
 
-M.default_classes["witchhunter"] = {
+M.DEFAULT_CLASSES["witchhunter"] = {
 	name = "Witchhunter",
 	specialization = 1,
 	majorAttributes = {1, 3},

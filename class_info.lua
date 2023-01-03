@@ -1,11 +1,12 @@
-local config = require('custom/reckless/config')
-local default_classes = config.default_classes
-local skill_id_skill_name_map = config.skill_id_skill_name_map
+local base_path = 'custom/steady_leveling/'
+local config = require(base_path .. 'config')
+local DEFAULT_CLASSES = config.DEFAULT_CLASSES
+local SKILL_ID_SKILL_NAME_MAP = config.SKILL_ID_SKILL_NAME_MAP
 
 M = {}
 
 local function get_default_class(class_id)
-	return default_classes[class_id]
+	return DEFAULT_CLASSES[class_id]
 end
 
 local function generate_custom_class(pid)
@@ -43,23 +44,32 @@ function M.get_player_class(pid)
 	end
 end
 
-function M.is_skill_major_or_minor(pid, skill)
+function M.is_skill_major(pid, skill)
 	local player_class = M.get_player_class(pid)
 
   local found = false
 	for _, skill_id in ipairs(player_class.majorSkills) do
-    if skill_id_skill_name_map[skill_id] == skill then
-      found = true
-    end
-	end
-
-	for _, skill_id in ipairs(player_class.minorSkills) do
-    if skill_id_skill_name_map[skill_id] == skill then
+    if SKILL_ID_SKILL_NAME_MAP[skill_id] == skill then
       found = true
     end
 	end
 
   return found
 end
+
+
+function M.is_skill_minor(pid, skill)
+	local player_class = M.get_player_class(pid)
+
+  local found = false
+	for _, skill_id in ipairs(player_class.minorSkills) do
+    if SKILL_ID_SKILL_NAME_MAP[skill_id] == skill then
+      found = true
+    end
+	end
+
+  return found
+end
+
 
 return M
