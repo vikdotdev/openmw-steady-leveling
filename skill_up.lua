@@ -37,7 +37,7 @@ local message_box = functions.message_box
 
 local function message_player_attribute_up(pid, attribute, prev_val, val)
   if prev_val > val then
-    message_box(pid, attribute .. " increases to " .. val .. '!')
+    message_box(pid, attribute .. " increases to " .. get_attribute(pid, attribute) .. '!')
   end
 end
 
