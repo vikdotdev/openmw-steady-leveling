@@ -34,7 +34,7 @@ local function init_player(_, pid)
     data.gradual_misc_attribute_increases[attribute] = 0
   end
 
-  Players[pid].data.customVariables.RELE = data
+  Players[pid].data.customVariables.STELEV = data
 
   cache_attributes(pid)
   cache_skills(pid)
