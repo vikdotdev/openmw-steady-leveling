@@ -10,30 +10,26 @@ local function get_default_class(class_id)
 end
 
 local function generate_custom_class(pid)
-	local player_class = Players[pid].data.customClass
-	local data = {}
+  local player_class = Players[pid].data.customClass
+  local data = {}
 
-	data.name = player_class.name
-	data.description = player_class.description
+  data.name = player_class.name
+  data.description = player_class.description
 
-	local major = {}
-	table.insert(major, tes3mp.GetClassMajorSkill(pid, 0))
-	table.insert(major, tes3mp.GetClassMajorSkill(pid, 1))
-	table.insert(major, tes3mp.GetClassMajorSkill(pid, 2))
-	table.insert(major, tes3mp.GetClassMajorSkill(pid, 3))
-	table.insert(major, tes3mp.GetClassMajorSkill(pid, 4))
+  local major = {}
+  local minor = {}
 
-	local minor = {}
-	table.insert(minor, tes3mp.GetClassMinorSkill(pid, 0))
-	table.insert(minor, tes3mp.GetClassMinorSkill(pid, 1))
-	table.insert(minor, tes3mp.GetClassMinorSkill(pid, 2))
-	table.insert(minor, tes3mp.GetClassMinorSkill(pid, 3))
-	table.insert(minor, tes3mp.GetClassMinorSkill(pid, 4))
+  for _, index in ipairs({ 0, 1, 2, 3, 4 }) do
+    table.insert(major, tes3mp.GetClassMajorSkill(pid, index))
+  end
+  for _, index in ipairs({ 0, 1, 2, 3, 4 }) do
+    table.insert(minor, tes3mp.GetClassMinorSkill(pid, index))
+  end
 
-	data.major_skills = major
-	data.minor_skills = minor
+  data.majorSkills = major
+  data.minorSkills = minor
 
-	return data
+  return data
 end
 
 function M.get_player_class(pid)
@@ -48,11 +44,11 @@ function M.is_skill_major(pid, skill)
 	local player_class = M.get_player_class(pid)
 
   local found = false
-	for _, skill_id in ipairs(player_class.majorSkills) do
-    if SKILL_ID_SKILL_NAME_MAP[skill_id] == skill then
+  for _, player_skill in ipairs(player_class.majorSkills) do
+    if SKILL_ID_SKILL_NAME_MAP[player_skill] == skill then
       found = true
     end
-	end
+  end
 
   return found
 end
@@ -62,11 +58,11 @@ function M.is_skill_minor(pid, skill)
 	local player_class = M.get_player_class(pid)
 
   local found = false
-	for _, skill_id in ipairs(player_class.minorSkills) do
-    if SKILL_ID_SKILL_NAME_MAP[skill_id] == skill then
+  for _, player_skill in ipairs(player_class.minorSkills) do
+    if SKILL_ID_SKILL_NAME_MAP[player_skill] == skill then
       found = true
     end
-	end
+  end
 
   return found
 end
